@@ -7,7 +7,12 @@ import {
   updateTaskStatus, 
   updateTaskPriority,
   updateTaskDueDate,
-  updateTaskEstimatedHours
+  updateTaskEstimatedHours,
+  updateTaskTitle,
+  updateTaskDescription,
+  updateTaskCourse,
+  updateTaskType,
+  updateTaskTags
 } from '../store/taskSlice';
 import { filterTasks, sortTasksByPriority, generateSampleTasks } from '../utils/taskUtils';
 import TaskCard from './TaskCard';
@@ -56,6 +61,26 @@ export default function Dashboard() {
 
   const handleEstimatedHoursChange = (taskId: string, estimatedHours: number | undefined) => {
     dispatch(updateTaskEstimatedHours({ id: taskId, estimatedHours }));
+  };
+
+  const handleTitleChange = (taskId: string, title: string) => {
+    dispatch(updateTaskTitle({ id: taskId, title }));
+  };
+
+  const handleDescriptionChange = (taskId: string, description: string) => {
+    dispatch(updateTaskDescription({ id: taskId, description }));
+  };
+
+  const handleCourseChange = (taskId: string, courseCode: string, courseName: string) => {
+    dispatch(updateTaskCourse({ id: taskId, courseCode, courseName }));
+  };
+
+  const handleTypeChange = (taskId: string, type: Task['type']) => {
+    dispatch(updateTaskType({ id: taskId, type }));
+  };
+
+  const handleTagsChange = (taskId: string, tags: string[]) => {
+    dispatch(updateTaskTags({ id: taskId, tags }));
   };
 
   const handleFiltersChange = (newFilters: typeof filters) => {
@@ -301,6 +326,11 @@ export default function Dashboard() {
                   onPriorityChange={handlePriorityChange}
                   onDueDateChange={handleDueDateChange}
                   onEstimatedHoursChange={handleEstimatedHoursChange}
+                  onTitleChange={handleTitleChange}
+                  onDescriptionChange={handleDescriptionChange}
+                  onCourseChange={handleCourseChange}
+                  onTypeChange={handleTypeChange}
+                  onTagsChange={handleTagsChange}
                 />
               ))}
             </div>

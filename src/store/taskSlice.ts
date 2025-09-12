@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
-import type { Task, FilterOptions, TaskPriority, TaskStatus } from '../types';
+import type { Task, FilterOptions, TaskPriority, TaskStatus, TaskType } from '../types';
 
 interface TaskState {
   tasks: Task[];
@@ -113,6 +113,52 @@ const taskSlice = createSlice({
         localStorage.setItem('nus-tasks', JSON.stringify(state.tasks));
       }
     },
+    updateTaskTitle: (state, action: PayloadAction<{ id: string; title: string }>) => {
+      const task = state.tasks.find(t => t.id === action.payload.id);
+      if (task) {
+        task.title = action.payload.title;
+        task.updatedAt = new Date();
+        // Persist to localStorage
+        localStorage.setItem('nus-tasks', JSON.stringify(state.tasks));
+      }
+    },
+    updateTaskDescription: (state, action: PayloadAction<{ id: string; description: string }>) => {
+      const task = state.tasks.find(t => t.id === action.payload.id);
+      if (task) {
+        task.description = action.payload.description;
+        task.updatedAt = new Date();
+        // Persist to localStorage
+        localStorage.setItem('nus-tasks', JSON.stringify(state.tasks));
+      }
+    },
+    updateTaskCourse: (state, action: PayloadAction<{ id: string; courseCode: string; courseName: string }>) => {
+      const task = state.tasks.find(t => t.id === action.payload.id);
+      if (task) {
+        task.courseCode = action.payload.courseCode;
+        task.courseName = action.payload.courseName;
+        task.updatedAt = new Date();
+        // Persist to localStorage
+        localStorage.setItem('nus-tasks', JSON.stringify(state.tasks));
+      }
+    },
+    updateTaskType: (state, action: PayloadAction<{ id: string; type: TaskType }>) => {
+      const task = state.tasks.find(t => t.id === action.payload.id);
+      if (task) {
+        task.type = action.payload.type;
+        task.updatedAt = new Date();
+        // Persist to localStorage
+        localStorage.setItem('nus-tasks', JSON.stringify(state.tasks));
+      }
+    },
+    updateTaskTags: (state, action: PayloadAction<{ id: string; tags: string[] }>) => {
+      const task = state.tasks.find(t => t.id === action.payload.id);
+      if (task) {
+        task.tags = action.payload.tags;
+        task.updatedAt = new Date();
+        // Persist to localStorage
+        localStorage.setItem('nus-tasks', JSON.stringify(state.tasks));
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -142,5 +188,17 @@ const taskSlice = createSlice({
   },
 });
 
-export const { setFilters, setSearchQuery, updateTaskStatus, updateTaskPriority, updateTaskDueDate, updateTaskEstimatedHours } = taskSlice.actions;
+export const { 
+  setFilters, 
+  setSearchQuery, 
+  updateTaskStatus, 
+  updateTaskPriority, 
+  updateTaskDueDate, 
+  updateTaskEstimatedHours,
+  updateTaskTitle,
+  updateTaskDescription,
+  updateTaskCourse,
+  updateTaskType,
+  updateTaskTags
+} = taskSlice.actions;
 export default taskSlice.reducer;
