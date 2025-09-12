@@ -82,6 +82,8 @@ const taskSlice = createSlice({
       if (task) {
         task.status = action.payload.status;
         task.updatedAt = new Date();
+        // Persist to localStorage
+        localStorage.setItem('nus-tasks', JSON.stringify(state.tasks));
       }
     },
     updateTaskPriority: (state, action: PayloadAction<{ id: string; priority: TaskPriority }>) => {
@@ -89,6 +91,26 @@ const taskSlice = createSlice({
       if (task) {
         task.priority = action.payload.priority;
         task.updatedAt = new Date();
+        // Persist to localStorage
+        localStorage.setItem('nus-tasks', JSON.stringify(state.tasks));
+      }
+    },
+    updateTaskDueDate: (state, action: PayloadAction<{ id: string; dueDate: Date }>) => {
+      const task = state.tasks.find(t => t.id === action.payload.id);
+      if (task) {
+        task.dueDate = action.payload.dueDate;
+        task.updatedAt = new Date();
+        // Persist to localStorage
+        localStorage.setItem('nus-tasks', JSON.stringify(state.tasks));
+      }
+    },
+    updateTaskEstimatedHours: (state, action: PayloadAction<{ id: string; estimatedHours: number | undefined }>) => {
+      const task = state.tasks.find(t => t.id === action.payload.id);
+      if (task) {
+        task.estimatedHours = action.payload.estimatedHours;
+        task.updatedAt = new Date();
+        // Persist to localStorage
+        localStorage.setItem('nus-tasks', JSON.stringify(state.tasks));
       }
     },
   },
@@ -120,5 +142,5 @@ const taskSlice = createSlice({
   },
 });
 
-export const { setFilters, setSearchQuery, updateTaskStatus, updateTaskPriority } = taskSlice.actions;
+export const { setFilters, setSearchQuery, updateTaskStatus, updateTaskPriority, updateTaskDueDate, updateTaskEstimatedHours } = taskSlice.actions;
 export default taskSlice.reducer;

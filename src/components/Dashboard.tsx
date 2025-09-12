@@ -5,7 +5,9 @@ import {
   setFilters, 
   setSearchQuery, 
   updateTaskStatus, 
-  updateTaskPriority 
+  updateTaskPriority,
+  updateTaskDueDate,
+  updateTaskEstimatedHours
 } from '../store/taskSlice';
 import { filterTasks, sortTasksByPriority, generateSampleTasks } from '../utils/taskUtils';
 import TaskCard from './TaskCard';
@@ -21,7 +23,6 @@ export default function Dashboard() {
   // Modal states
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [showEmailIntegration, setShowEmailIntegration] = useState(false);
-  const [editingTask, setEditingTask] = useState<Task | undefined>(undefined);
 
   useEffect(() => {
     dispatch(fetchTasks());
@@ -49,14 +50,12 @@ export default function Dashboard() {
     dispatch(updateTaskPriority({ id: taskId, priority }));
   };
 
-  const handleEditTask = (task: Task) => {
-    setEditingTask(task);
-    setShowTaskForm(true);
+  const handleDueDateChange = (taskId: string, dueDate: Date) => {
+    dispatch(updateTaskDueDate({ id: taskId, dueDate }));
   };
 
-  const handleCloseTaskForm = () => {
-    setShowTaskForm(false);
-    setEditingTask(undefined);
+  const handleEstimatedHoursChange = (taskId: string, estimatedHours: number | undefined) => {
+    dispatch(updateTaskEstimatedHours({ id: taskId, estimatedHours }));
   };
 
   const handleFiltersChange = (newFilters: typeof filters) => {
@@ -300,7 +299,8 @@ export default function Dashboard() {
                   task={task}
                   onStatusChange={handleStatusChange}
                   onPriorityChange={handlePriorityChange}
-                  onEdit={handleEditTask}
+                  onDueDateChange={handleDueDateChange}
+                  onEstimatedHoursChange={handleEstimatedHoursChange}
                 />
               ))}
             </div>
@@ -333,8 +333,7 @@ export default function Dashboard() {
       {/* Modals */}
       <TaskForm 
         isOpen={showTaskForm} 
-        onClose={handleCloseTaskForm}
-        editTask={editingTask}
+        onClose={() => setShowTaskForm(false)}
       />
       
       <EmailIntegration 
