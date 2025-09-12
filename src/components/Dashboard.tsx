@@ -125,9 +125,38 @@ export default function Dashboard() {
   }
 
   return (
-    <div style={{ minHeight: 'calc(100vh - 56px)', background: '#f9fafb' }}>
-      {/* Main Content */}
-      <main style={{ maxWidth: '1280px', margin: '0 auto', padding: '2rem 1rem' }}>
+    <div style={{ 
+      minHeight: 'calc(100vh - 56px)', 
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      position: 'relative',
+      overflow: 'hidden'
+    }}>
+      {/* Background pattern overlay */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundImage: `radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                         radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                         radial-gradient(circle at 40% 80%, rgba(255,255,255,0.1) 0%, transparent 50%)`,
+        pointerEvents: 'none'
+      }} />
+      
+      {/* Content container */}
+      <div style={{ 
+        position: 'relative', 
+        zIndex: 1,
+        background: 'rgba(249, 250, 251, 0.95)',
+        backdropFilter: 'blur(10px)',
+        minHeight: 'calc(100vh - 56px)',
+        margin: '0 1rem',
+        borderRadius: '1rem 1rem 0 0',
+        boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.1)'
+      }}>
+        {/* Main Content */}
+        <main style={{ maxWidth: '1280px', margin: '0 auto', padding: '2rem 1rem' }}>
         {/* Quick Stats Cards */}
         <div style={{ 
           display: 'grid', 
@@ -370,6 +399,7 @@ export default function Dashboard() {
         isOpen={showEmailIntegration} 
         onClose={() => setShowEmailIntegration(false)} 
       />
+      </div>
     </div>
   );
 }
