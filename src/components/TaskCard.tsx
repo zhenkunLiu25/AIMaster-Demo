@@ -6,6 +6,7 @@ interface TaskCardProps {
   task: Task;
   onStatusChange: (taskId: string, status: Task['status']) => void;
   onPriorityChange: (taskId: string, priority: Task['priority']) => void;
+  onEdit?: (task: Task) => void;
   onClick?: () => void;
 }
 
@@ -23,14 +24,38 @@ const typeIcons = {
   other: '📋',
 };
 
-const statusColors = {
-  pending: { background: '#f3f4f6', color: '#374151' },
-  'in-progress': { background: '#dbeafe', color: '#1d4ed8' },
-  completed: { background: '#dcfce7', color: '#166534' },
-  overdue: { background: '#fef2f2', color: '#dc2626' },
+const sourceInfo = {
+  email: { 
+    icon: '📧', 
+    label: 'Auto-imported from email',
+    background: '#eff6ff',
+    color: '#1d4ed8',
+    border: '#bfdbfe'
+  },
+  calendar: { 
+    icon: '�', 
+    label: 'Synced from calendar',
+    background: '#f0fdf4',
+    color: '#166534',
+    border: '#bbf7d0'
+  },
+  manual: { 
+    icon: '✍️', 
+    label: 'Created manually',
+    background: '#fef7ff',
+    color: '#7c2d12',
+    border: '#e7c3ff'
+  },
 };
 
-export default function TaskCard({ task, onStatusChange, onPriorityChange, onClick }: TaskCardProps) {
+const statusColors = {
+  pending: { background: '#f3f4f6', color: '#374151', border: '#dc2626' },
+  'in-progress': { background: '#dbeafe', color: '#1d4ed8', border: '#1d4ed8' },
+  completed: { background: '#dcfce7', color: '#166534', border: '#166534' },
+  overdue: { background: '#fef2f2', color: '#dc2626', border: '#dc2626' },
+};
+
+export default function TaskCard({ task, onStatusChange, onPriorityChange, onEdit, onClick }: TaskCardProps) {
   const urgency = getTaskUrgency(task);
   const calculatedPriority = calculatePriority(task);
   const daysUntilDue = differenceInDays(task.dueDate, new Date());
@@ -47,18 +72,14 @@ export default function TaskCard({ task, onStatusChange, onPriorityChange, onCli
   };
 
   const cardStyle: React.CSSProperties = {
-    ...{
-      background: 'white',
-      borderRadius: '0.5rem',
-      boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
-      border: '1px solid #e5e7eb',
-      padding: '1rem',
-      cursor: onClick ? 'pointer' : 'default',
-      transition: 'box-shadow 0.2s',
-    },
-    ...(urgency === 'overdue' && { borderLeft: '4px solid #ef4444' }),
-    ...(urgency === 'urgent' && { borderLeft: '4px solid #f97316' }),
-    ...(urgency === 'upcoming' && { borderLeft: '4px solid #eab308' }),
+    background: 'white',
+    borderRadius: '0.5rem',
+    boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+    border: '1px solid #e5e7eb',
+    borderLeft: `4px solid ${statusColors[task.status].border}`,
+    padding: '1rem',
+    cursor: onClick ? 'pointer' : 'default',
+    transition: 'box-shadow 0.2s',
   };
 
   const priorityStyle = priorityColors[calculatedPriority];
@@ -79,16 +100,37 @@ export default function TaskCard({ task, onStatusChange, onPriorityChange, onCli
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', flex: 1 }}>
           <span style={{ fontSize: '2rem' }}>{typeIcons[task.type]}</span>
           <div style={{ flex: 1 }}>
-            <h3 style={{ 
-              fontWeight: '600', 
-              color: '#111827', 
-              fontSize: '1.125rem', 
-              lineHeight: '1.25', 
-              margin: 0,
-              marginBottom: '0.25rem'
-            }}>
-              {task.title}
-            </h3>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', marginBottom: '0.25rem' }}>
+              <h3 style={{ 
+                fontWeight: '600', 
+                color: '#111827', 
+                fontSize: '1.125rem', 
+                lineHeight: '1.25', 
+                margin: 0,
+                flex: 1
+              }}>
+                {task.title}
+              </h3>
+              {/* Source indicator badge */}
+              <div 
+                style={{
+                  padding: '0.125rem 0.375rem',
+                  borderRadius: '0.25rem',
+                  fontSize: '0.625rem',
+                  fontWeight: '500',
+                  border: `1px solid ${sourceInfo[task.source].border}`,
+                  background: sourceInfo[task.source].background,
+                  color: sourceInfo[task.source].color,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.25rem'
+                }}
+                title={sourceInfo[task.source].label}
+              >
+                <span>{sourceInfo[task.source].icon}</span>
+                {task.source === 'email' ? 'AUTO' : task.source === 'calendar' ? 'SYNC' : 'MANUAL'}
+              </div>
+            </div>
             {task.courseCode && (
               <p style={{ fontSize: '0.875rem', color: '#6b7280', margin: 0 }}>
                 {task.courseCode} - {task.courseName}
@@ -194,30 +236,53 @@ export default function TaskCard({ task, onStatusChange, onPriorityChange, onCli
         paddingTop: '0.75rem', 
         borderTop: '1px solid #f3f4f6' 
       }}>
-        <select
-          value={task.status}
-          onChange={(e) => onStatusChange(task.id, e.target.value as Task['status'])}
-          style={{
-            fontSize: '0.75rem',
-            padding: '0.25rem 0.5rem',
-            borderRadius: '0.25rem',
-            border: '0',
-            ...statusColors[task.status],
-          }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <option value="pending">Pending</option>
-          <option value="in-progress">In Progress</option>
-          <option value="completed">Completed</option>
-        </select>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <select
+            value={task.status}
+            onChange={(e) => onStatusChange(task.id, e.target.value as Task['status'])}
+            style={{
+              fontSize: '0.75rem',
+              padding: '0.25rem 0.5rem',
+              borderRadius: '0.25rem',
+              border: 'none',
+              background: statusColors[task.status].background,
+              color: statusColors[task.status].color,
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <option value="pending">Pending</option>
+            <option value="in-progress">In Progress</option>
+            <option value="completed">Completed</option>
+          </select>
+          
+          {onEdit && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(task);
+              }}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#6b7280',
+                cursor: 'pointer',
+                padding: '0.25rem',
+                fontSize: '0.875rem',
+                borderRadius: '0.25rem',
+                display: 'flex',
+                alignItems: 'center',
+                transition: 'color 0.2s',
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#374151'}
+              onMouseLeave={(e) => e.currentTarget.style.color = '#6b7280'}
+              title="Edit task"
+            >
+              ✏️
+            </button>
+          )}
+        </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span style={{ fontSize: '0.75rem', color: '#6b7280' }}>
-            {task.source === 'email' && '📧'}
-            {task.source === 'calendar' && '📅'}
-            {task.source === 'manual' && '✍️'}
-          </span>
-          
           <select
             value={task.priority}
             onChange={(e) => onPriorityChange(task.id, e.target.value as Task['priority'])}

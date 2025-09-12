@@ -21,6 +21,7 @@ export default function Dashboard() {
   // Modal states
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [showEmailIntegration, setShowEmailIntegration] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | undefined>(undefined);
 
   useEffect(() => {
     dispatch(fetchTasks());
@@ -46,6 +47,16 @@ export default function Dashboard() {
 
   const handlePriorityChange = (taskId: string, priority: Task['priority']) => {
     dispatch(updateTaskPriority({ id: taskId, priority }));
+  };
+
+  const handleEditTask = (task: Task) => {
+    setEditingTask(task);
+    setShowTaskForm(true);
+  };
+
+  const handleCloseTaskForm = () => {
+    setShowTaskForm(false);
+    setEditingTask(undefined);
   };
 
   const handleFiltersChange = (newFilters: typeof filters) => {
@@ -105,7 +116,7 @@ export default function Dashboard() {
               <span style={{ fontSize: '1.25rem' }}>📋</span>
               <span style={{ fontWeight: 'bold', color: '#1f2937' }}>Pending</span>
             </div>
-            <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#374151' }}>{pending.length}</p>
+            <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#dc2626' }}>{pending.length}</p>
           </div>
           
           <div style={{ background: 'white', padding: '1.5rem', borderRadius: '0.5rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
@@ -289,6 +300,7 @@ export default function Dashboard() {
                   task={task}
                   onStatusChange={handleStatusChange}
                   onPriorityChange={handlePriorityChange}
+                  onEdit={handleEditTask}
                 />
               ))}
             </div>
@@ -321,7 +333,8 @@ export default function Dashboard() {
       {/* Modals */}
       <TaskForm 
         isOpen={showTaskForm} 
-        onClose={() => setShowTaskForm(false)} 
+        onClose={handleCloseTaskForm}
+        editTask={editingTask}
       />
       
       <EmailIntegration 
