@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>NUS Canvas Tasks</title>
+    <style>
+      body { 
+        font-family: Arial, sans-serif; 
+        margin: 0; 
+        padding: 16px; 
+        width: 400px;
+        min-height: 300px;
+      }
+      .header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 16px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #e5e7eb;
+        gap: 8px;
+      }
+      .header h2 {
+        margin: 0;
+        color: #4F46E5;
+        font-size: 18px;
+        flex: 1;
+      }
+      .task-count {
+        background: #4F46E5;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        min-width: 20px;
+        text-align: center;
+      }
+      .refresh-btn {
+        background: #4F46E5;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 36px;
+        height: 32px;
+      }
+      .refresh-btn:hover {
+        background: #4338CA;
+      }
+      .loading {
+        text-align: center;
+        color: #6b7280;
+        padding: 20px;
+      }
+      .task-item {
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 8px;
+        background: white;
+      }
+      .task-title {
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 4px;
+      }
+      .task-meta {
+        font-size: 12px;
+        color: #6b7280;
+        display: flex;
+        gap: 12px;
+      }
+      .task-due {
+        color: #dc2626;
+        font-weight: 500;
+      }
+      .task-type {
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: rgba(79, 70, 229, 0.1);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .task-course {
+        color: #059669;
+        font-weight: 500;
+      }
+      .no-tasks {
+        text-align: center;
+        color: #6b7280;
+        padding: 40px 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h2>Canvas Tasks</h2>
+      <span class="task-count" id="taskCount">0</span>
+      <button class="refresh-btn" id="refreshBtn" title="Refresh tasks">⟳</button>
+    </div>
+    <div id="tasks" class="loading">Loading tasks...</div>
+    <script src="popup.js"></script>
+  </body>
+</html>

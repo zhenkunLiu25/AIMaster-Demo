@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "NUS Canvas Task Extractor",
+  "version": "0.1.0",
+  "description": "Extract assignments, quizzes, and exams from canvas.nus.edu.sg for task management.",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": ["https://canvas.nus.edu.sg/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.svg",
+      "48": "icon48.svg",
+      "128": "icon128.svg"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://canvas.nus.edu.sg/*"],
+      "js": ["aimaster-sync.js", "contentScript.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
