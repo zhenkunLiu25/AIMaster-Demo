@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Canvas Test Page - Course XYZ</title>
+</head>
+<body>
+    <h1>Welcome to Canvas</h1>
+    
+    <!-- Simulated assignments table -->
+    <table>
+        <tr>
+            <td><a href="/courses/123/assignments/456">Math Assignment 1</a></td>
+            <td class="due-date">Due: Jan 15, 2025</td>
+        </tr>
+        <tr>
+            <td><a href="/courses/123/quizzes/789">Physics Quiz 2</a></td>
+            <td>Due: Jan 20, 2025</td>
+        </tr>
+        <tr>
+            <td><a href="/courses/123/assignments/101">Final Project</a></td>
+            <td>Due: Feb 1, 2025</td>
+        </tr>
+    </table>
+    
+    <!-- Simulated calendar events -->
+    <div class="fc-event">
+        <span class="fc-title">Chemistry Exam</span>
+        <span class="fc-time">Jan 25, 2025</span>
+    </div>
+    
+    <!-- Simulated direct links -->
+    <div>
+        <a href="/courses/123/assignments/111">Literature Essay</a>
+        <span>Due Jan 30, 2025</span>
+    </div>
+    
+    <a href="/courses/123/discussion_topics/222">Weekly Discussion</a>
+    
+    <script>
+        // Test our extractor on this page
+        console.log('Test page loaded, running extractor...');
+        
+        // Inject our simple extractor
+        const script = document.createElement('script');
+        script.src = '../simple-extractor.js';
+        document.head.appendChild(script);
+    </script>
+</body>
+</html>

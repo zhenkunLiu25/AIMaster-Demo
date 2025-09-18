@@ -34,27 +34,39 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
   
   if (message.action === 'syncToAIMaster') {
-    // Manual sync request
-    chrome.storage.local.get(['canvasTasks'], (result) => {
-      const tasks = result.canvasTasks || [];
-      syncToAIMaster(tasks);
-      sendResponse({ success: true, synced: tasks.length });
-    });
+    // Manual sync request - check if specific tasks were selected
+    const tasksToSync = message.selectedTasks;
+    
+    if (tasksToSync && tasksToSync.length > 0) {
+      // Sync only selected tasks
+      syncToAIMaster(tasksToSync, sendResponse);
+    } else {
+      // Fallback: sync all tasks
+      chrome.storage.local.get(['canvasTasks'], (result) => {
+        const tasks = result.canvasTasks || [];
+        syncToAIMaster(tasks, sendResponse);
+      });
+    }
     
     return true;
   }
 });
 
 // Auto-sync function (defined here to be accessible)
-async function syncToAIMaster(tasks) {
+async function syncToAIMaster(tasks, sendResponse = null) {
   const AIMASTER_CONFIG = {
     WEB_APP_URL: 'http://localhost:5173',
     API_ENDPOINT: '/api/import-tasks'
   };
 
-  if (tasks.length === 0) return;
+  if (tasks.length === 0) {
+    if (sendResponse) sendResponse({ success: false, error: 'No tasks to sync' });
+    return;
+  }
 
   try {
+    console.log(`[Background] Syncing ${tasks.length} tasks to AIMaster...`);
+    
     const response = await fetch(`${AIMASTER_CONFIG.WEB_APP_URL}${AIMASTER_CONFIG.API_ENDPOINT}`, {
       method: 'POST',
       headers: {
@@ -72,11 +84,21 @@ async function syncToAIMaster(tasks) {
       chrome.action.setBadgeBackgroundColor({ color: '#059669' });
       
       setTimeout(() => chrome.action.setBadgeText({ text: '' }), 3000);
+      
+      if (sendResponse) {
+        sendResponse({ success: true, synced: tasks.length });
+      }
+    } else {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
   } catch (error) {
     console.error('[Background] Sync error:', error);
     chrome.action.setBadgeText({ text: '!' });
-    chrome.action.setBadgeBackgroundColor({ color: '#f59e0b' });
+    chrome.action.setBadgeBackgroundColor({ color: '#dc2626' });
+    
+    if (sendResponse) {
+      sendResponse({ success: false, error: error.message });
+    }
   }
 }
 

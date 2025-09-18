@@ -18,9 +18,9 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://canvas.nus.edu.sg/*"],
-      "js": ["aimaster-sync.js", "contentScript.js"],
-      "run_at": "document_idle"
+      "matches": ["*://canvas.nus.edu.sg/*"],
+      "js": ["simple-extractor.js"],
+      "run_at": "document_end"
     }
   ]
 }

@@ -24,19 +24,54 @@ export default function handler(req: any, res: any) {
       }
 
       // Transform Canvas tasks to AIMaster format
-      const transformedTasks = tasks.map((canvasTask: any) => ({
-        id: `canvas-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-        title: canvasTask.title,
-        description: `${canvasTask.type} from ${canvasTask.course}`,
-        dueDate: canvasTask.dueDate,
-        priority: getPriorityFromType(canvasTask.type),
-        course: canvasTask.course,
-        type: canvasTask.type.toLowerCase(),
-        status: 'pending',
-        source: 'canvas-extension',
-        originalUrl: canvasTask.url,
-        extractedAt: canvasTask.extractedAt
-      }));
+      const transformedTasks = tasks.map((canvasTask: any) => {
+        // Build description with enhanced course and score info
+        let description = `${canvasTask.type}`;
+        
+        // Add course information
+        if (canvasTask.courseCode && canvasTask.courseTitle) {
+          description += ` from ${canvasTask.courseCode}: ${canvasTask.courseTitle}`;
+        } else if (canvasTask.course) {
+          description += ` from ${canvasTask.course}`;
+        }
+        
+        // Add score information
+        if (canvasTask.score) {
+          description += ` | Score: ${canvasTask.score.display}`;
+          if (canvasTask.score.percentage !== null && canvasTask.score.percentage !== undefined) {
+            description += ` (${canvasTask.score.percentage}%)`;
+          }
+        }
+        
+        // Add grade status
+        if (canvasTask.gradeStatus) {
+          description += ` | Status: ${canvasTask.gradeStatus}`;
+        }
+        
+        return {
+          id: `canvas-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          title: canvasTask.title,
+          description: description,
+          dueDate: canvasTask.dueDate,
+          priority: getPriorityFromType(canvasTask.type),
+          course: canvasTask.courseCode || canvasTask.course || 'Unknown Course',
+          type: canvasTask.type.toLowerCase(),
+          status: canvasTask.gradeStatus?.toLowerCase().includes('graded') ? 'completed' : 'pending',
+          source: 'manual' as const,
+          tags: canvasTask.courseCode ? [canvasTask.courseCode] : [],
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          // Include enhanced Canvas data for reference  
+          canvasData: {
+            score: canvasTask.score,
+            gradeStatus: canvasTask.gradeStatus,
+            courseCode: canvasTask.courseCode,
+            courseTitle: canvasTask.courseTitle,
+            originalUrl: canvasTask.url,
+            extractedAt: canvasTask.extractedAt
+          }
+        } as Task;
+      });
 
       // Store tasks (in production, save to database)
       receivedTasks.push(...transformedTasks);

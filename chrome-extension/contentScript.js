@@ -1,6 +1,8 @@
 // Content script to extract assignments, quizzes, and exams from Canvas
 (function() {
   console.log('[NUS Canvas Task Extractor] Content script loaded on:', window.location.href);
+  console.log('[NUS Canvas Task Extractor] Page title:', document.title);
+  console.log('[NUS Canvas Task Extractor] DOM ready state:', document.readyState);
 
   function extractTasks() {
     const tasks = [];
@@ -167,11 +169,23 @@
     const tasks = [];
     const currentCourse = extractCourseName(); // Get course name for this page
     
+    console.log('[Content Script] Starting task extraction...');
+    console.log('[Content Script] Current course:', currentCourse);
+    console.log('[Content Script] Page URL:', window.location.href);
+    
+    // Debug: Check what elements exist on the page
+    console.log('[Debug] Checking for Canvas elements...');
+    
     // Extract from dashboard/assignments page
     const assignmentItems = document.querySelectorAll(
       '.assignment, .assignment-list-item, .ig-title, .submission-item, ' +
       '.todo-item, .assignment-group-item, .context_module_item'
     );
+    
+    console.log('[Debug] Found assignment elements:', assignmentItems.length);
+    assignmentItems.forEach((item, index) => {
+      console.log(`[Debug] Assignment item ${index}:`, item.className, item.textContent.substring(0, 50));
+    });
     
     assignmentItems.forEach(item => {
       const titleEl = item.querySelector('.assignment-title, .ig-title, .title, h3, a, .item_name') || item;
@@ -275,6 +289,8 @@
   }
 
   function sendTasksToExtension(tasks) {
+    console.log('[Content Script] Sending tasks to extension:', tasks);
+    
     if (tasks.length > 0) {
       console.log('[NUS Canvas Task Extractor] Found tasks:', tasks);
       
@@ -284,6 +300,8 @@
         tasks: tasks,
         url: window.location.href
       });
+    } else {
+      console.log('[NUS Canvas Task Extractor] No tasks found on this page');
     }
   }
 
