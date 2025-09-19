@@ -1,149 +1,200 @@
-# NUS Student Task Assistant MVP
+# AIMaster
 
-A comprehensive web application designed to help NUS students manage their academic tasks, assignments, exams, and deadlines in one unified dashboard with intelligent prioritization and smart reminders.
+A modern, comprehensive AI-powered task management application. This application helps users organize their work, track assignments, manage deadlines, and stay on top of their responsibilities with intelligent automation and insights.
 
-## 🎯 Problem Statement
+## Features
 
-NUS students constantly juggle assignments, project deadlines, exams, and admin tasks spread across emails, learning portals, and chat groups. Important dates are buried in messages or scattered across calendars, making it hard to know what to do first. This fragmentation leads to stress, overlooked tasks, and poor prioritization.
+### 📊 Dashboard
+- **Overview Statistics**: Track pending tasks, due this week, completed tasks, and projects
+- **Priority Task Management**: View and manage tasks by priority with visual indicators
+- **Advanced Filtering**: Filter by project, type, priority, and sort by different criteria
+- **Search Functionality**: Quickly find tasks with real-time search
+- **Upcoming Deadlines**: Visual calendar preview of upcoming due dates
 
-## 💡 Solution
+### 📅 Calendar View
+- **Monthly Calendar**: Visual representation of all tasks and deadlines
+- **Daily Task Overview**: See today's tasks at a glance
+- **Color-coded Priority**: Tasks displayed with priority-based colors
+- **Interactive Navigation**: Easy month-to-month navigation
 
-Create a single-source-of-truth task assistant that securely connects to NUS email and calendars, automatically extracts and consolidates tasks, and applies smart prioritization. The platform presents all upcoming assignments, exams, and events in one clean dashboard and sends proactive reminders—helping students stay organized and focus on the most urgent work.
+### ✉️ Inbox
+- **Notifications Hub**: Centralized location for all important notifications
+- **Project Announcements**: Stay updated with project-specific information
+- **Task Notifications**: Get notified when tasks are updated or completed
+- **Deadline Reminders**: Automatic reminders for approaching deadlines
 
-## ✨ Features
+### ⚙️ Settings
+- **Profile Management**: Update personal information and avatar
+- **Notification Preferences**: Customize email and push notifications
+- **Appearance Settings**: Dark mode and compact view options
+- **Privacy Controls**: Manage data sharing and profile visibility
+- **Data Export**: Export your data or delete your account
 
-### 🟢 Core Features (MVP)
+### 🎯 Task Management
+- **CRUD Operations**: Create, read, update, and delete tasks
+- **Progress Tracking**: Visual progress bars for each task
+- **Priority Levels**: High, medium, and low priority assignments
+- **Project Organization**: Organize tasks by project with color coding
+- **Tag System**: Add custom tags for better organization
+- **Due Date Management**: Set and track due dates with smart formatting
 
-1. **Smart Task Extraction**
-   - Secure email integration (Microsoft Graph for NUS Outlook)
-   - NLP to identify assignments, exams, and key deadlines automatically
-   - Manual task creation with rich metadata
+## Technology Stack
 
-2. **Unified Task Dashboard**
-   - Central list of tasks from email, calendar, and manual input
-   - Categories by course/module and task type (assignment, exam, meeting)
-   - Quick search and filtering capabilities
-   - Visual urgency indicators with color coding
+- **Frontend**: React 18 with Hooks
+- **Routing**: React Router DOM
+- **Styling**: Tailwind CSS with custom components
+- **Icons**: Lucide React
+- **Date Handling**: date-fns
+- **Build Tool**: Vite
+- **State Management**: React Context API
+- **Data Persistence**: Local Storage
 
-3. **Intelligent Prioritization**
-   - Ranking engine based on due date, workload, and user preferences
-   - Automatic priority calculation considering task types and deadlines
-   - Smart sorting algorithm for optimal task ordering
+## Project Structure
 
-4. **Reminders & Notifications**
-   - Customizable push/email alerts
-   - Smart reminders (e.g., "Start Assignment X two days early based on workload")
-   - Proactive deadline warnings
+```
+src/
+├── components/           # Reusable UI components
+│   ├── Header.jsx       # Top navigation bar
+│   ├── Layout.jsx       # Main layout wrapper
+│   ├── Sidebar.jsx      # Navigation sidebar
+│   ├── TaskCard.jsx     # Individual task display
+│   └── TaskModal.jsx    # Task creation/editing modal
+├── context/             # React context providers
+│   └── TaskContext.jsx  # Global state management
+├── pages/               # Main application pages
+│   ├── Calendar.jsx     # Calendar view
+│   ├── Dashboard.jsx    # Main dashboard
+│   ├── Inbox.jsx        # Notifications inbox
+│   └── Settings.jsx     # User settings
+├── styles/              # CSS and styling
+│   └── index.css        # Global styles and Tailwind
+├── utils/               # Utility functions
+│   ├── colors.js        # Color utilities
+│   └── dateUtils.js     # Date formatting utilities
+├── App.jsx              # Main application component
+└── main.jsx             # Application entry point
+```
 
-5. **Calendar Integration**
-   - Two-way sync with NUS and personal calendars (Google, iCal)
-   - Drag-and-drop scheduling
-   - Visual timeline view
-
-## 🚀 Quick Start
+## Getting Started
 
 ### Prerequisites
+- Node.js (version 16 or higher)
+- npm or yarn package manager
 
-- Node.js 18 or higher
-- npm or yarn
-- Docker (optional, for containerized deployment)
+### Installation
 
-### Development Setup
-
-1. **Clone and install dependencies:**
+1. **Clone the repository** (or navigate to your project directory)
    ```bash
-   git clone <repository-url>
-   cd nus-task-assistant
+   cd DeepSite
+   ```
+
+2. **Install dependencies**
+   ```bash
    npm install
    ```
 
-2. **Start development server:**
+3. **Start the development server**
    ```bash
    npm run dev
    ```
 
-3. **Open your browser:**
-   - Navigate to `http://localhost:5173`
-   - The app will load with sample data for demonstration
+4. **Open your browser**
+   Navigate to `http://localhost:3000` to view the application
 
-### Docker Deployment
+### Available Scripts
 
-1. **Build and run with Docker Compose:**
-   ```bash
-   docker-compose up --build
-   ```
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
 
-2. **Access the application:**
-   - Navigate to `http://localhost:3000`
+## Key Features Explained
 
-3. **Production deployment:**
-   ```bash
-   docker build -t nus-task-assistant .
-   docker run -p 3000:80 nus-task-assistant
-   ```
+### State Management
+The application uses React Context API for global state management, providing:
+- Task CRUD operations
+- Filter and search functionality
+- User preferences
+- Course management
+- Persistent data storage
 
-## 🏗️ Technology Stack
+### Responsive Design
+Built with mobile-first approach using Tailwind CSS:
+- Responsive sidebar that collapses on mobile
+- Adaptive grid layouts
+- Touch-friendly interactions
+- Optimized for various screen sizes
 
-### Frontend
-- **React 18** with TypeScript for type safety and modern development
-- **Vite** for fast development and optimized builds
-- **Tailwind CSS** for responsive, utility-first styling
-- **Redux Toolkit** for predictable state management
-- **React DnD** for drag-and-drop functionality
-- **Heroicons** for consistent iconography
-- **date-fns** for date manipulation and formatting
+### Data Persistence
+- Automatic saving to browser localStorage
+- Data persistence across sessions
+- Export functionality for backup
+- Clean data structure for easy migration
 
-### Infrastructure
-- **Docker** for containerization and easy deployment
-- **Nginx** for production web serving with optimizations
-- **LocalStorage** for MVP data persistence (upgradeable to cloud databases)
+### Performance Optimizations
+- Lazy loading of components
+- Memoized calculations for filtered data
+- Efficient re-rendering with React hooks
+- Optimized bundle size with Vite
 
-## 📱 User Interface
+## Customization
 
-### Dashboard Features
-- **Task Cards**: Rich task display with priority indicators, due dates, and course information
-- **Smart Filtering**: Search by text, filter by course, type, priority, and status
-- **Visual Indicators**: Color-coded priority levels and urgency warnings
-- **Quick Actions**: One-click status updates and priority changes
-- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
+### Adding New Projects
+Projects can be added through the TaskContext or via the UI. Each project has:
+- Unique ID
+- Display name
+- Color for visual identification
 
-## 🧪 Testing
+### Extending Task Types
+The application supports various task types:
+- Assignments
+- Exams
+- Projects
+- Quizzes
+- Reading tasks
 
-```bash
-# Run unit tests
-npm run test
+New types can be added by updating the TaskModal component.
 
-# Run development server
-npm run dev
+### Theme Customization
+Colors and styling can be customized through:
+- `tailwind.config.js` for global theme settings
+- `src/utils/colors.js` for component-specific colors
+- `src/styles/index.css` for custom CSS classes
 
-# Build for production
-npm run build
+## Browser Support
 
-# Preview production build
-npm run preview
-```
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
 
-## 📈 Roadmap
+## Contributing
 
-### Phase 1 (Current MVP)
-- [x] Basic task management and dashboard
-- [x] Smart prioritization algorithm
-- [x] Responsive UI with filtering and search
-- [x] Docker containerization
-- [ ] Email integration setup
-- [ ] Calendar integration setup
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
-### Phase 2 (Enhanced Features)
-- [ ] Real-time notifications
-- [ ] Advanced filtering and analytics
-- [ ] Export/import functionality
-- [ ] Progressive Web App features
-- [ ] Mobile-optimized interface
+## License
 
-## 🎓 Academic Context
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-This project is developed as part of the NUS Master of Computing program, specifically for IT5007 (Software Engineering on Modern Application Platforms). It demonstrates modern web development practices, software engineering principles, and addresses real-world problems faced by NUS students.
+## Future Enhancements
+
+- **Backend Integration**: Connect to a real backend API
+- **Real-time Sync**: Multi-device synchronization
+- **Collaboration Features**: Team project management
+- **Advanced Analytics**: Study pattern analysis
+- **Mobile App**: React Native companion app
+- **Integration**: Canvas/LMS integration
+- **AI Features**: Smart deadline suggestions
+- **Offline Support**: PWA capabilities
+
+## Support
+
+For questions, issues, or suggestions, please create an issue in the repository or contact the development team.
 
 ---
 
-Made with ❤️ for the NUS student community
+Built with ❤️ for productivity enthusiasts by the AIMaster team.
